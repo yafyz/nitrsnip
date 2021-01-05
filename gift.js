@@ -1,5 +1,6 @@
 const undici = require("undici").Client
-const config = require("./config")
+const fs = require("fs")
+const config = JSON.parse(fs.readFileSync("files/config.json"));
 const regex_str = /(discord.gift|(discordapp|discord)(\.com|\.gg)(\/gifts|\/billing\/promotions\/xbox-game-pass\/redeem))\/((.+?)[\/|\s]|(.+))/g // /(discord.gift|discordapp.com\/gifts|discord.com\/gifts)\/((.+?)[\/|\s]|(.+))/g
 const undici_client = new undici(`https://discordapp.com`)
 

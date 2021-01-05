@@ -1,0 +1,17 @@
+{
+  "name": "nitrsnip",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fyz",
+  "license": "ISC",
+  "dependencies": {
+    "erlpack": "^0.1.3",
+    "undici": "^2.2.0",
+    "ws": "^7.4.2",
+    "zlib-sync": "^0.1.7"
+  }
+}

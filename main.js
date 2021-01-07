@@ -1,6 +1,7 @@
 const fs = require("fs");
 const gifts = require("./gift");
 const dclient = require("./client.js");
+const config = JSON.parse(fs.readFileSync("files/config.json"));
 
 async function handleEvent(packet) {
     if (packet.t == "MESSAGE_CREATE") {
@@ -9,7 +10,6 @@ async function handleEvent(packet) {
     }
 }
 
-const config = JSON.parse(fs.readFileSync("files/config.json"));
 
 let tokens = [];
 
@@ -28,13 +28,8 @@ if (config["use_multiple_tokens"]) {
 (async ()=>{
     gifts.keepSocketAlive();
     for (let i = 0; i < tokens.length; i++) {
-        console.log(`Crating dclient for account n${i}`)
+        console.log(`Creating dclient for account n${i}`)
         var cl = new dclient(tokens[i], config.d_gateway, handleEvent);
         cl.connect();
     }
-})()
-
-//tokens.forEach(token=>{
-//});
-//var c = new dclient(config.d_token, config.d_gateway, handleEvent);
-//c.connect();
+})();

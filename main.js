@@ -26,6 +26,7 @@ if (config["use_multiple_tokens"]) {
 }
 
 (async ()=>{
+    gifts.keepSocketAlive();
     for (let i = 0; i < tokens.length; i++) {
         console.log(`Crating dclient for account n${i}`)
         var cl = new dclient(tokens[i], config.d_gateway, handleEvent);

@@ -3,6 +3,7 @@ const fs = require("fs")
 const config = JSON.parse(fs.readFileSync("files/config.json"));
 const regex_str = /(discord.gift|(discordapp|discord)(\.com|\.gg)(\/gifts|\/billing\/promotions\/xbox-game-pass\/redeem))\/((.+?)[\/|\s]|(.+))/g
 const undici_client = new undici(`https://discordapp.com`)
+const db = new (require("./database"))("files/db.json")
 
 function sendSocket(path, method) {
     undici_client.request({
@@ -12,7 +13,18 @@ function sendSocket(path, method) {
     })
 }
 
-function keepAlive() {
+function reportErr(e) {
+    console.log(e)
+    if (config.d_err_webhook == "" || typeof config.d_err_webhook != "string")
+    if (e.stack != null && e.stack != undefined)
+        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": e.stack.replace("\\", "\\\\").replace("\n", "\\n")}]}))
+    else
+        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": "Stack was null"}]}))
+}
+
+function Init() {
+    process.on('uncaughtException', reportErr);
+    db.assureValueExists("codes", {});
     sendSocket("/api/", "GET");
     setInterval(()=>sendSocket("/api/", "GET"), 2000);
 }
@@ -35,16 +47,27 @@ async function reportGiftStatus(code, payload, body) {
     try {
         js = JSON.parse(body)
     } catch (error) {
-        sendWebhook(config.d_test_webhook, JSON.stringify({"color": 47103, "embeds": [{"description": body.replace(/"/g, "\\\"")}]}))
+        reportErr(error)
+        return
     }
-
+    
+    if (js.code == 10038) // Code invalid
+        db.getValue("codes")[code] = 0;
+    else if (js.code == 50050) // Code claimed
+        db.getValue("codes")[code] = 1;
+    else if (js.code == 50070) // Gamepass code
+        db.getValue("codes")[code] = 2;
+    else if (js.consumed == true) // Code valid
+        db.getValue("codes")[code] = 3;
+    
     sendWebhook(config.d_webhook, JSON.stringify({
         "embeds": [
           {
             "title": `${code}`,
             "color": js.code == 10038 ? 15417396 :
                      js.code == 50050 ? 15258703 :
-                     js.code == 50070 ? 4360181 : 1237834,
+                     js.code == 50070 ? 4360181 :
+                     js.code == 0 ? 0 : 1237834,
             "fields": [
                 {"name": "Message", "value": payload.content, "inline": true},
                 {"name": "Message link", "value": `https://discord.com/channels/${payload.guild_id}/${payload.channel_id}/${payload.id}`, "inline": true},
@@ -56,7 +79,10 @@ async function reportGiftStatus(code, payload, body) {
 }
 
 async function handleGift(code, payload) {
+    code = code.trim();
     console.log(`| GIFT | '${code}'`)
+    if (db.getValue("codes")[code] != undefined)
+        return
     undici_client.request({
         path: `/api/v8/entitlements/gift-codes/${code}/redeem`,
         method: "POST",
@@ -93,5 +119,5 @@ async function checkForGift(packet) {
 
 module.exports = {
     checkForGift: checkForGift,
-    keepSocketAlive: keepAlive
+    Init: Init
 }

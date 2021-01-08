@@ -5,11 +5,11 @@ const config = JSON.parse(fs.readFileSync("files/config.json"));
 
 async function handleEvent(packet) {
     if (packet.t == "MESSAGE_CREATE") {
-        console.log(`${packet.d.author.username} > ${packet.d.content}`);
+        if (config["show_messages"])
+            console.log(`${packet.d.author.username} > ${packet.d.content}`);
         gifts.checkForGift(packet);
     }
 }
-
 
 let tokens = [];
 
@@ -26,7 +26,7 @@ if (config["use_multiple_tokens"]) {
 }
 
 (async ()=>{
-    gifts.keepSocketAlive();
+    gifts.Init();
     for (let i = 0; i < tokens.length; i++) {
         console.log(`Creating dclient for account n${i}`)
         var cl = new dclient(tokens[i], config.d_gateway, handleEvent);

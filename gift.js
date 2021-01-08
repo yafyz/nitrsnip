@@ -15,7 +15,10 @@ function sendSocket(path, method) {
 
 function reportErr(e) {
     console.log(e)
-    if (config.d_err_webhook == "" || typeof config.d_err_webhook != "string")
+    if (config.d_err_webhook == "" || typeof config.d_err_webhook != "string") {
+        console.log("Invalid error report webhook")
+        return
+    }
     if (e.stack != null && e.stack != undefined)
         sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": e.stack.replace("\\", "\\\\").replace("\n", "\\n")}]}))
     else

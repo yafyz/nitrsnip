@@ -44,7 +44,7 @@ async function sendWebhook(webhook, body) {
     })
 }
 
-async function reportGiftStatus(code, payload, body) {
+async function reportGiftStatus(code, payload, body, latency) {
     console.log(`| REDEEM | ${body}`)
     let js = {code: 0}
     try {
@@ -71,6 +71,9 @@ async function reportGiftStatus(code, payload, body) {
                      js.code == 50050 ? 15258703 :
                      js.code == 50070 ? 4360181 :
                      js.code == 0 ? 0 : 1237834,
+            "footer": {
+                "text": `Latency: ${latency}ms`
+            },
             "fields": [
                 {"name": "Message", "value": payload.content, "inline": true},
                 {"name": "Message link", "value": `https://discord.com/channels/${payload.guild_id}/${payload.channel_id}/${payload.id}`, "inline": true},
@@ -86,6 +89,7 @@ async function handleGift(code, payload) {
     console.log(`| GIFT | '${code}'`)
     if (db.getValue("codes")[code] != undefined)
         return
+    let timethen = Date.now();
     undici_client.request({
         path: `/api/v8/entitlements/gift-codes/${code}/redeem`,
         method: "POST",
@@ -101,7 +105,7 @@ async function handleGift(code, payload) {
         }
         let body = ""
         data.body.setEncoding('utf8')
-        data.body.on("end", ()=>reportGiftStatus(code, payload, body))
+        data.body.on("end", ()=>reportGiftStatus(code, payload, body, Date.now()-timethen))
         data.body.on("data", (bdy)=>{
             console.log(`| ONDATA | ${bdy}`)
             body += bdy

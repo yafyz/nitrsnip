@@ -1,7 +1,7 @@
 const undici = require("undici").Client
 const fs = require("fs")
 const config = JSON.parse(fs.readFileSync("files/config.json"));
-const regex_str = /(discord.gift|(discordapp|discord)(\.com|\.gg)(\/gifts|\/billing\/promotions\/xbox-game-pass\/redeem))\/((.+?)[\/|\s]|(.+))/g
+const regex_str = /(?:discord\.gift|(?:discord|discordapp)(?:\.com|\.gg)(?:\/gift|\/gifts|\/billing\/promotions\/xbox-game-pass\/redeem))\/([A-Za-z0-9]+)/g
 const undici_client = new undici(`https://discordapp.com`)
 const db = new (require("./database"))("files/db.json")
 
@@ -110,14 +110,8 @@ async function handleGift(code, payload) {
 }
 
 async function checkForGift(packet) {
-    if (packet.d.webhook_id != undefined && packet.d.webhook_id.toString() == config.d_ita_id)
-        return
-    const matches = packet.d.content.matchAll(regex_str)
-    for (const match of matches) {
-        let s
-        match.forEach((e)=> {if (e!=undefined) s = e})
-        handleGift(s, packet.d)
-    }
+    for (const match of packet.d.content.matchAll(regex_str))
+        handleGift(match[1], packet.d)
 }
 
 module.exports = {

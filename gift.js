@@ -10,6 +10,11 @@ function sendSocket(path, method) {
         host: "discord.com",
         path: path,
         method: method,
+    }, (_, data)=>{
+        let body = ""
+        data.body.setEncoding('utf8')
+        data.body.on("end", ()=>console.log(`| PING | ${body}`))
+        data.body.on("data", (bdy)=>body += bdy)
     })
 }
 
@@ -28,8 +33,8 @@ function reportErr(e) {
 function Init() {
     process.on('uncaughtException', reportErr);
     db.assureValueExists("codes", {});
-    sendSocket("/api/", "GET");
-    setInterval(()=>sendSocket("/api/", "GET"), 2000);
+    sendSocket(config.d_webhook, "GET");
+    setInterval(()=>sendSocket(config.d_webhook, "GET"), 2000);
 }
 
 async function sendWebhook(webhook, body) {
@@ -106,10 +111,7 @@ async function handleGift(code, payload) {
         let body = ""
         data.body.setEncoding('utf8')
         data.body.on("end", ()=>reportGiftStatus(code, payload, body, Date.now()-timethen))
-        data.body.on("data", (bdy)=>{
-            console.log(`| ONDATA | ${bdy}`)
-            body += bdy
-        })
+        data.body.on("data", (bdy)=>body += bdy)
     })
 }
 

@@ -10,7 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "erlpack": "^0.1.3",
-    "undici": "^2.2.0",
     "ws": "^7.4.2",
     "zlib-sync": "^0.1.7"
   }

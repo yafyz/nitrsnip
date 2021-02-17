@@ -14,6 +14,7 @@ class httpsSocket {
     options = null;
     is_connected = false;
     reconnect = false;
+
     #queue = [];
 
     constructor(host) {
@@ -39,9 +40,8 @@ class httpsSocket {
             })
             if (this.reconnect) {
                 this.socket.on("end", ()=>{
-                    console.log("reconnect");
                     this.is_connected = false;
-                    this.connect();
+                    this.connect(this.reconnect);
                 })
             }
         });

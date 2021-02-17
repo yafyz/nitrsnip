@@ -3,5 +3,4 @@ node_modules
 package-lock.json
 # my stuff
 files
-config.js
 test.js

@@ -6,11 +6,14 @@ class Response {
     Headers = {};
     ContentLength = 0;
     Body = null;
+    Error = null;
 }
 
 class httpsSocket {
     socket = null;
     options = null;
+    is_connected = false;
+    reconnect = false;
     #queue = [];
 
     constructor(host) {
@@ -23,18 +26,24 @@ class httpsSocket {
     }
     connect = function(reconnect) {
         return new Promise(res=> {
-            this.socket = tls.connect(this.options, ()=>res(this.socket.authorized));
+            this.reconnect = reconnect;
+            this.socket = tls.connect(this.options, ()=>{
+                this.is_connected = true;
+                res(this.socket.authorized);
+            });
             this.socket.setEncoding("ascii");
             this.socket.on("data", d => {
                 if (this.#queue.length > 0)
                     if (this.#queue[0](d))
                         this.#queue.shift();
             })
-            if (reconnect)
+            if (this.reconnect) {
                 this.socket.on("end", ()=>{
                     console.log("reconnect");
-                    this.connect(reconnect);
+                    this.is_connected = false;
+                    this.connect();
                 })
+            }
         });
     }
 
@@ -54,36 +63,81 @@ class httpsSocket {
         return new Promise(resolve=>{
             let res = new Response();
             let content_filled = 0;
+
+            let is_chunked = false;
+            let got_chunks = false;
+            let last_chunk_end = "";
+            let chunks = [];
+
             let callback = d => {
                 if (res.StatusCode == "0") {
-                    let split = d.split("\r\n");
+                    let hthead = d.indexOf("\r\n");
+                    let scode_start = d.indexOf(" ");
+                    let scode_end = d.indexOf(" ", scode_start+1);
+                    res.StatusCode = d.slice(scode_start+1, scode_end);
+                    res.StatusMessage = d.slice(scode_end+1, hthead);
+                    
+                    let lastidx = hthead+2;
+                    let nextidx;
+                    let hstr;
+                    let colonidx;
 
-                    {let fidx = split[0].indexOf(" ");
-                    let sidx = split[0].indexOf(" ", fidx+1);
-                    res.StatusCode = split[0].slice(fidx+1, sidx);
-                    res.StatusMessage = split[0].slice(sidx+1);}
-
-                    let lastidx;
-                    {let sidx;
-                    for (let i = 1; i < split.length; i++) {
-                        if (split[i] == "") {
-                            lastidx = i;
+                    while (true) {
+                        nextidx = d.indexOf("\r\n", lastidx);
+                        hstr = d.slice(lastidx, nextidx);
+                        lastidx = nextidx+2;
+                        if (hstr === "")
                             break;
-                        }
-                        sidx = split[i].indexOf(":");
-                        res.Headers[split[i].slice(0, sidx)] = split[i].slice(sidx+2);
-                    }}
-                    res.ContentLength = Number.parseInt(res.Headers["Content-Length"]);
-                    res.Body = Buffer.alloc(res.ContentLength);
-                    let bstring = split.slice(lastidx).join("");
-                    res.Body.write(bstring,0);
-                    content_filled += bstring.length;
-                } else {
-                    res.Body.write(d, content_filled);
-                    content_filled += d.length;
-                }
+                        colonidx = hstr.indexOf(":");
+                        res.Headers[hstr.slice(0,colonidx)] = hstr.slice(colonidx+2);
+                    }
 
-                if (content_filled >= res.ContentLength) {
+                    res.ContentLength = Number.parseInt(res.Headers["Content-Length"]);
+                    if (!isNaN(res.ContentLength)) {
+                        res.Body = Buffer.allocUnsafe(res.ContentLength);
+                        let bstring = d.slice(lastidx);
+                        content_filled += res.Body.write(bstring, content_filled);
+                    } else {
+                        is_chunked = true;
+                        let szlen = d.indexOf("\r\n", lastidx);
+                        let len = Number.parseInt(d.slice(lastidx, szlen), 16);
+                        let bstring = d.slice(szlen+2);
+                        res.Body = Buffer.allocUnsafe(len);
+                        res.Body.write(bstring,0);
+                        content_filled += res.Body.write(bstring, 0);
+                    }
+                } else {
+                    if (!is_chunked) {
+                        content_filled += res.Body.write(d, content_filled);
+                    } else {
+                        try {
+                            if (d == "0\r\n\r\n") {
+                                got_chunks = true;
+                                if (chunks.length > 0) {
+                                    chunks.push(res.Body);
+                                    res.Body = Buffer.concat(chunks);
+                                }
+                            } else {
+                                if (last_chunk_end == "\r\n") {
+                                    chunks.push(res.Body);
+                                    let szlen = d.indexOf("\r\n");
+                                    let len = Number.parseInt(d.slice(0, szlen), 16);
+                                    res.Body = Buffer.allocUnsafe(len);
+                                    content_filled = 0;
+                                    d = d.slice(szlen+2);
+                                }
+                                last_chunk_end = d.slice(-2);
+                                if (last_chunk_end == "\r\n")
+                                    d = d.slice(0,-2);
+                                content_filled += res.Body.write(d, content_filled);
+                            }
+                        } catch (ex) {
+                            res.Error = ex;
+                            resolve(res);
+                        }
+                    }
+                }
+                if (content_filled >= res.ContentLength || got_chunks) {
                     resolve(res);
                     return true;
                 }

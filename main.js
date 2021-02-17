@@ -1,7 +1,7 @@
 const fs = require("fs");
 const gifts = require("./gift");
 const dclient = require("./client.js");
-const config = JSON.parse(fs.readFileSync("files/config.json"));
+const config = require("./config");
 
 async function handleEvent(packet) {
     if (packet.t == "MESSAGE_CREATE") {

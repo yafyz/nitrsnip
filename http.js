@@ -1,4 +1,5 @@
 const tls = require("tls");
+const { runInThisContext } = require("vm");
 
 class Response {
     StatusCode = "0";
@@ -16,6 +17,7 @@ class httpsSocket {
     reconnect = false;
 
     #queue = [];
+    #is_reconnect = false;
 
     constructor(host) {
         this.options = {
@@ -25,11 +27,13 @@ class httpsSocket {
             requestCert:false
         }
     }
-    connect = function(reconnect) {
+    connect = function(reconnect, on_reconnect_callback = ()=>{}) {
         return new Promise(res=> {
             this.reconnect = reconnect;
             this.socket = tls.connect(this.options, ()=>{
                 this.is_connected = true;
+                if (this.#is_reconnect)
+                    on_reconnect_callback();
                 res(this.socket.authorized);
             });
             this.socket.setEncoding("ascii");
@@ -41,7 +45,8 @@ class httpsSocket {
             if (this.reconnect) {
                 this.socket.on("end", ()=>{
                     this.is_connected = false;
-                    this.connect(this.reconnect);
+                    this.#is_reconnect = true;
+                    this.connect(this.reconnect, on_reconnect_callback);
                 })
             }
         });

@@ -18,7 +18,7 @@ function reportErr(e) {
 function Init() {
     process.on('uncaughtException', reportErr);
     db.assureValueExists("codes", {});
-    https_client.connect(true);
+    https_client.connect(true, () => https_client.request("POST", `/api/`));
 }
 
 async function sendWebhook(webhook, body) {

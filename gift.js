@@ -1,4 +1,4 @@
-const regex_str = /(?:discord\.gift|(?:discord|discordapp)(?:\.com|\.gg)(?:\/gift|\/gifts|\/billing\/promotions\/xbox-game-pass\/redeem))\/([A-Za-z0-9]+)/g
+const regex_str = /(?:discord\.gift|(?:discord|discordapp)\.com\/gifts)\/([A-Za-z0-9]+)/g
 const config = require("./config");
 const https_client = new (require("./http"))("discord.com");
 const db = new (require("./database"))("files/db.json");

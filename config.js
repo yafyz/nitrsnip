@@ -1,5 +1,6 @@
 const fs = require("fs")
-if (!process.env.d_token)
+module.exports = JSON.parse(fs.readFileSync("files/config.json"));
+/*if (!process.env.d_token)
     module.exports = JSON.parse(fs.readFileSync("files/config.json"));
 else {
     let tokens = process.env.tokens;
@@ -13,4 +14,4 @@ else {
         "tokens_file": "files/tokens.txt",
         "show_messages": process.env.show_messages
     }
-}
+}*/

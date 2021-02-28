@@ -1,5 +1,4 @@
 const tls = require("tls");
-const { runInThisContext } = require("vm");
 
 class Response {
     StatusCode = "0";
@@ -94,10 +93,10 @@ class httpsSocket {
                         if (hstr === "")
                             break;
                         colonidx = hstr.indexOf(":");
-                        res.Headers[hstr.slice(0,colonidx)] = hstr.slice(colonidx+2);
+                        res.Headers[hstr.slice(0,colonidx).toLowerCase()] = hstr.slice(colonidx+2);
                     }
 
-                    res.ContentLength = Number.parseInt(res.Headers["Content-Length"]);
+                    res.ContentLength = Number.parseInt(res.Headers["content-length"]);
                     if (!isNaN(res.ContentLength)) {
                         res.Body = Buffer.allocUnsafe(res.ContentLength);
                         let bstring = d.slice(lastidx);

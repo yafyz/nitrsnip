@@ -50,8 +50,8 @@ async function reportGiftStatus(code, payload, body, latency) {
             "title": `${code}`,
             "color": js.code == 10038 ? 15417396 :
                      js.code == 50050 ? 15258703 :
-                     js.code == 50070 ? 4360181 :
-                     js.code == 0 ? 0 : 1237834,
+                     js.code == 50070 ? 4360181  :
+                     js.code == 0     ? 0        : 1237834,
             "footer": {
                 "text": `Latency: ${latency}ms`
             },
@@ -65,19 +65,22 @@ async function reportGiftStatus(code, payload, body, latency) {
     }))
 }
 
-async function handleGift(code, payload) {
-    code = code.trim();
+function handleGift(code, payload) {
     console.log(`| GIFT | '${code}'`);
     if (db.getValue("codes")[code] != undefined)
         return;
     let timethen = Date.now();
-    let res = await https_client.request("POST", `/api/v8/entitlements/gift-codes/${code}/redeem`, {authorization: config.d_token, "content-type": "application/json"}, "{\"channel_id\":null,\"payment_source_id\":null}");
-    if (res.Error != null)
-        reportErr(err);
-    reportGiftStatus(code, payload, res.Body.toString(), Date.now()-timethen);
+    // synchronously send the request/imediately
+    let res = https_client.request("POST", `/api/v8/entitlements/gift-codes/${code}/redeem`, {authorization: config.d_token, "content-type": "application/json"}, "{\"channel_id\":null,\"payment_source_id\":null}");
+    (async ()=>{ // wait for it asynchronously
+        res = await res;
+        if (res.Error != null)
+            reportErr(err);
+        reportGiftStatus(code, payload, res.Body.toString(), Date.now()-timethen);
+    })();
 }
 
-async function checkForGift(packet) {
+function checkForGift(packet) {
     for (const match of packet.d.content.matchAll(regex_str))
         handleGift(match[1], packet.d)
 }

@@ -3,7 +3,7 @@ const gifts = require("./gift");
 const dclient = require("./client.js");
 const config = require("./config");
 
-async function handleEvent(packet) {
+function handleEvent(packet) {
     if (packet.t == "MESSAGE_CREATE") {
         if (config["show_messages"])
             console.log(`${packet.d.author.username} > ${packet.d.content}`);

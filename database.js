@@ -9,7 +9,7 @@ function onExit(obj, e) {
 }
 
 class database {
-    path = ""
+    path = "";
     jObj = {};
 
     constructor(db_path, autosave=true) {
@@ -17,7 +17,7 @@ class database {
             fs.writeFileSync(db_path, "{}");
         }
         {
-            let str = fs.readFileSync(db_path)
+            let str = fs.readFileSync(db_path);
             this.jObj = JSON.parse(str != "" && str || "{}");
             this.path = db_path;
         }
@@ -36,7 +36,7 @@ class database {
 
     assureValueExists = function(path, value) {
         let obj = this.jObj;
-        let sp = path.split("/")
+        let sp = path.split("/");
         let plen = sp.length;
         sp.forEach((v,i) => {
             if (obj[v] == undefined && plen-1 == i)

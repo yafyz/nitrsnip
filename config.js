@@ -1,4 +1,4 @@
-const fs = require("fs")
+const fs = require("fs");
 module.exports = JSON.parse(fs.readFileSync("files/config.json"));
 /*if (!process.env.d_token)
     module.exports = JSON.parse(fs.readFileSync("files/config.json"));

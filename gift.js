@@ -4,10 +4,10 @@ const https_client = new (require("./http"))("discord.com");
 const db = new (require("./database"))("files/db.json");
 
 function reportErr(e) {
-    console.log(e)
+    console.log(e);
     if (config.d_err_webhook == "" || typeof config.d_err_webhook != "string") {
-        console.log("Invalid error report webhook")
-        return
+        console.log("Invalid error report webhook");
+        return;
     }
     if (e.stack != null && e.stack != undefined)
         sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": e.stack.replace("\\", "\\\\").replace("\n", "\\n")}]}))
@@ -26,13 +26,13 @@ async function sendWebhook(webhook, body) {
 }
 
 async function reportGiftStatus(code, payload, body, latency) {
-    console.log(`| REDEEM | ${body}`)
-    let js = {code: 0}
+    console.log(`| REDEEM | ${body}`);
+    let js = {code: 0};
     try {
-        js = JSON.parse(body)
+        js = JSON.parse(body);
     } catch (error) {
-        reportErr(error)
-        return
+        reportErr(error);
+        return;
     }
     
     if (js.code == 10038) // Code invalid
@@ -82,7 +82,7 @@ function handleGift(code, payload) {
 
 function checkForGift(packet) {
     for (const match of packet.d.content.matchAll(regex_str))
-        handleGift(match[1], packet.d)
+        handleGift(match[1], packet.d);
 }
 
 module.exports = {

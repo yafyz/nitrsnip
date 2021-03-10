@@ -69,9 +69,9 @@ function handleGift(code, payload) {
     console.log(`| GIFT | '${code}'`);
     if (db.getValue("codes")[code] != undefined)
         return;
-    let timethen = Date.now();
     // synchronously send the request/imediately
     let res = https_client.request("POST", `/api/v8/entitlements/gift-codes/${code}/redeem`, {authorization: config.d_token, "content-type": "application/json"}, "{\"channel_id\":null,\"payment_source_id\":null}");
+    let timethen = Date.now(); // get time after sending for minimal latency
     (async ()=>{ // wait for it asynchronously
         res = await res;
         if (res.Error != null)

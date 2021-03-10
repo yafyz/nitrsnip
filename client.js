@@ -35,7 +35,7 @@ class discord_client {
             console.log("| WS | SENT AUTH");
         })
         
-        this.#ws.on('message', async data => {
+        this.#ws.on('message', data => {
             if (data.readUInt32BE(data.length-4) ^ ZLIB_SUFFIX == 0) {
                 this.#zlib_inflate.push(data, zlib.Z_SYNC_FLUSH);
                 if (this.#zlib_inflate.result == undefined)
@@ -53,7 +53,7 @@ class discord_client {
         });
     }
 
-    #handlePacket = async function (packet) {
+    #handlePacket = function (packet) {
         if (packet.s != undefined)
             this.#last_sequence = packet.s
     

@@ -51,19 +51,7 @@ class httpsSocket {
         });
     }
 
-    request = function (method, path, headers={Host: this.options.host}, body = "") {
-        let packet = `${method} ${path} HTTP/1.1\n`;
-        if (headers["Host"] == undefined)
-            packet += `Host: ${this.options.host}\n`;
-        if (body.length > 0 || method != "GET")
-            packet += `Content-Length: ${body.length}\n`;
-        for (const v in headers)
-            packet += `${v}: ${headers[v]}\n`;
-        packet += "\n";
-        if (body.length != 0)
-            packet += body;
-        this.socket.write(packet);
-
+    #get_response = function() {
         return new Promise(resolve=>{
             let res = new Response();
             let content_filled = 0;
@@ -148,6 +136,26 @@ class httpsSocket {
             };
             this.#queue.push(callback);
         });
+    }
+
+    request = function (method, path, headers={Host: this.options.host}, body = "") {
+        let payload = `${method} ${path} HTTP/1.1\n`;
+        if (headers["Host"] == undefined)
+            payload += `Host: ${this.options.host}\n`;
+        if (body.length > 0 || method != "GET")
+            payload += `Content-Length: ${body.length}\n`;
+        for (const v in headers)
+            payload += `${v}: ${headers[v]}\n`;
+        payload += "\n";
+        if (body.length != 0)
+            payload += body;
+        this.socket.write(payload);
+        return this.#get_response();
+    }
+
+    request_raw = function(payload="") {
+        this.socket.write(payload);
+        return this.#get_response();
     }
 }
 

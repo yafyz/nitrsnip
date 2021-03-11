@@ -70,7 +70,12 @@ function handleGift(code, payload) {
     if (db.getValue("codes")[code] != undefined)
         return;
     // synchronously send the request/imediately
-    let res = https_client.request("POST", `/api/v8/entitlements/gift-codes/${code}/redeem`, {authorization: config.d_token, "content-type": "application/json"}, "{\"channel_id\":null,\"payment_source_id\":null}");
+    let res = https_client.request_raw(`POST /api/v8/entitlements/gift-codes/${code}/redeem HTTP/1.1
+host: discord.com
+content-length: 44
+authorization: ${config.d_token}
+
+{"channel_id":null,"payment_source_id":null}`)
     let timethen = Date.now(); // get time after sending for minimal latency
     (async ()=>{ // wait for it asynchronously
         res = await res;

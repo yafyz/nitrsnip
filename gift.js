@@ -66,7 +66,6 @@ async function reportGiftStatus(code, payload, body, latency) {
 }
 
 function handleGift(code, payload) {
-    console.log(`| GIFT | '${code}'`);
     if (db.getValue("codes")[code] != undefined)
         return;
     // synchronously send the request/imediately
@@ -77,6 +76,7 @@ authorization: ${config.d_token}
 
 {"channel_id":null,"payment_source_id":null}`)
     let timethen = Date.now(); // get time after sending for minimal latency
+    console.log(`| GIFT | '${code}'`);
     (async ()=>{ // wait for it asynchronously
         res = await res;
         if (res.Error != null)

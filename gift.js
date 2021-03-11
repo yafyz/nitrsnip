@@ -1,6 +1,6 @@
 const regex_str = /(?:discord\.gift|(?:discord|discordapp)\.com\/gifts)\/([A-Za-z0-9]+)/g
 const config = require("./config");
-const https_client = new (require("./http"))("discord.com");
+const http_client = new (require("./http"))("discord.com");
 const db = new (require("./database"))("files/db.json");
 
 function reportErr(e) {
@@ -18,11 +18,11 @@ function reportErr(e) {
 function Init() {
     process.on('uncaughtException', reportErr);
     db.assureValueExists("codes", {});
-    https_client.connect(true, () => https_client.request("POST", `/api/`));
+    http_client.connect(true, () => http_client.request("POST", `/api/`));
 }
 
 async function sendWebhook(webhook, body) {
-    await https_client.request("POST", webhook, {"content-type": "application/json"}, body);
+    await http_client.request("POST", webhook, {"content-type": "application/json"}, body);
 }
 
 async function reportGiftStatus(code, payload, body, latency) {
@@ -69,13 +69,13 @@ function handleGift(code, payload) {
     if (db.getValue("codes")[code] != undefined)
         return;
     // synchronously send the request/imediately
-    let res = https_client.request_raw(`POST /api/v8/entitlements/gift-codes/${code}/redeem HTTP/1.1
+    let res = http_client.request_raw(`POST /api/v8/entitlements/gift-codes/${code}/redeem HTTP/1.1
 host: discord.com
 content-length: 44
 authorization: ${config.d_token}
 
 {"channel_id":null,"payment_source_id":null}`)
-    let timethen = Date.now(); // get time after sending for minimal latency
+    let timethen = Date.now(); // get time after sending for minimal latency instead of before
     console.log(`| GIFT | '${code}'`);
     (async ()=>{ // wait for it asynchronously
         res = await res;

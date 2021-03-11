@@ -9,7 +9,7 @@ class Response {
     Error = null;
 }
 
-class httpsSocket {
+class httpClient {
     socket = null;
     options = null;
     is_connected = false;
@@ -159,4 +159,4 @@ class httpsSocket {
     }
 }
 
-module.exports = httpsSocket
+module.exports = httpClient

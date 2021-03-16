@@ -7,7 +7,7 @@ Uses it's own HTTP and discord client
 
 multi-token sniping support
 
-uses minimal ammount of packages (uses 3 packages, 2 of which are native modules, and has total of 6 dependecies)
+uses minimal ammount of packages (uses 3 packages, 2 of which are native modules, and has total of 6 dependencies)
 # setup
 download the repo as zip (green "Code" button, then click "Download ZIP"), extract it somewhere
 
@@ -57,6 +57,8 @@ easy heroku deploy
 
 # other
 snipe at your own risk as its against discord ToS, probably
+
+the speed heavily depends on your latency to discord servers, heroku has pretty good latency (80-50ms average, 49-38ms also appears alot, 38ms> a bit more rarely)
 
 i have also planned to make my own WS client for this, but i feel like its a waste of time trying to do that as i would gain more performance by just rewriting this in a different language
 

@@ -57,6 +57,7 @@ each option explanation
 # TBA
 easy heroku deploy
 
+make it so it does not make such a big fingerprint (tbh not like others snipers even try to)
 # other
 snipe at your own risk as its against discord ToS, probably
 

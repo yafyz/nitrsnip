@@ -8,6 +8,8 @@ Uses it's own HTTP and discord client
 multi-token sniping support
 
 uses minimal ammount of packages (uses 3 packages, 2 of which are native modules, and has total of 6 dependencies)
+
+functional push notifications !!
 # setup
 download the repo as zip (green "Code" button, then click "Download ZIP"), extract it somewhere
 

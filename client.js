@@ -20,7 +20,7 @@ class discord_client {
 
     constructor(token, gateway, eventHandler) {
         this.#d_gateway = gateway;
-        this.#auth_data = erlpack.pack({"op":op.IDENTIFY,"d":{"token":token,"capabilities":61,"properties":{"os":"Windows","browser":"Chrome","device":"","browser_user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36","browser_version":"87.0.4280.66","os_version":"10","referrer":"","referring_domain":"","referrer_current":"https://discord.com/","referring_domain_current":"discord.com","release_channel":"stable","client_build_number":72382,"client_event_source":null},"presence":{"status":"invisible","since":0,"activities":[],"afk":false},"compress":false,"client_state":{"guild_hashes":{},"highest_last_message_id":"0","read_state_version":0,"user_guild_settings_version":-1}}})
+        this.#auth_data = erlpack.pack({"op":op.IDENTIFY,"d":{"token":token,"capabilities":61,"properties":{"os":"Windows","browser":"Chrome","device":"","browser_user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36","browser_version":"87.0.4280.66","os_version":"10","referrer":"","referring_domain":"","referrer_current":"https://discord.com/","referring_domain_current":"discord.com","release_channel":"stable","client_build_number":72382,"client_event_source":null},"presence":{"status":"invisible","since":0,"activities":[],"afk":true},"compress":false,"client_state":{"guild_hashes":{},"highest_last_message_id":"0","read_state_version":0,"user_guild_settings_version":-1}}})
         this.#handleEvent = eventHandler;
     }
     connect = function() {

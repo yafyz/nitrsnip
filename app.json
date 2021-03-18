@@ -14,7 +14,7 @@
         },
         "read_messages_on_redeem_account": {
             "required": true,
-            "value": "false"
+            "value": "true"
         },
         "use_multiple_tokens": {
             "required": true,

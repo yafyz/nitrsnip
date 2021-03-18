@@ -55,10 +55,28 @@ each option explanation
 "use_multiple_tokens" use multiple tokens, if set to true, it will load tokens from "tokens_file"
 "tokens_file" path to file with tokens, can be empty if "use_multiple_tokens" is set to false
 "show_messages" if set to true, will log messages to the console
+"tokens" used if "tokens_file" is not specified, tokens seperated by ; (no comment support)
+"cache_codes" when true, codes are only temporarily cached till the application is restarted, when false they are saved on exit and loaded upon startup
 ```
-# TBA
-easy heroku deploy
+all config can also be specified using env vars, env vars are only used if the directory files does not exist
+# heroku
+[heroku deploy](https://dashboard.heroku.com/new?template=https://github.com/yafyz/nitrsnip)
 
+configure according to config section (except the creation of files/* of course)
+
+once deployed, click manage app, then click configure dynos
+
+
+![](https://i.imgur.com/e2YVkN6.png)
+
+click the pencil icon and enable worker and disable web
+
+![](https://i.imgur.com/DzneB76.png)
+
+and click confirm on both
+
+done
+# TBA
 make it so it does not make such a big fingerprint (tbh not like others snipers even try to)
 # other
 snipe at your own risk as its against discord ToS, probably

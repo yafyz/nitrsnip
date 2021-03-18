@@ -17,12 +17,20 @@ if (config["read_messages_on_redeem_account"])
     tokens.push(config["d_token"]);
 
 if (config["use_multiple_tokens"]) {
-    let t = fs.readFileSync(config["tokens_file"]).toString();
-    t.split("\n").forEach(v=>{
-        v = v.split(";")[0].trim();
-        if (v != "")
-            tokens.push(v);
-    })
+    if (config["tokens_file"] != undefined) {
+        let t = fs.readFileSync(config["tokens_file"]).toString();
+        t.split("\n").forEach(v=>{
+            v = v.split(";")[0].trim();
+            if (v != "")
+                tokens.push(v);
+        })
+    } else {
+        config["tokens"].split(";").forEach(v=>{
+            v = v.trim();
+            if (v != "")
+                tokens.push(v);
+        })
+    }
 }
 
 (async ()=>{

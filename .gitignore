@@ -4,3 +4,4 @@ package-lock.json
 # my stuff
 files
 test.js
+setup_env.cmd

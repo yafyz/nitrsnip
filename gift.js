@@ -1,7 +1,10 @@
 const regex_str = /(?:discord\.gift|(?:discord|discordapp)\.com\/gifts)\/([A-Za-z0-9]+)/g
 const config = require("./config");
 const http_client = new (require("./http"))("discord.com");
-const db = new (require("./database"))("files/db.json");
+let db;
+if (!config["cache_codes"])
+    db = new (require("./database"))("files/db.json")
+
 
 function reportErr(e) {
     console.log(e);
@@ -15,9 +18,20 @@ function reportErr(e) {
         sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": "Stack was null"}]}))
 }
 
+let get_code_status;
+let set_code_status;
+
 function Init() {
     process.on('uncaughtException', reportErr);
-    db.assureValueExists("codes", {});
+    if (config["cache_codes"]) {
+        let cache = [];
+        get_code_status = (code) => cache[code];
+        set_code_status = (code, status) => cache[code] = status;
+    } else {
+        db.assureValueExists("codes", {});
+        get_code_status = (code) => db.getValue("codes")[code];
+        set_code_status = (code, status) => db.getValue("codes")[code] = status;
+    }
     http_client.connect(true, () => http_client.request("POST", `/api/`));
 }
 
@@ -36,13 +50,13 @@ async function reportGiftStatus(code, payload, body, latency) {
     }
     
     if (js.code == 10038) // Code invalid
-        db.getValue("codes")[code] = 0;
+        set_code_status(js.code, 0);
     else if (js.code == 50050) // Code claimed
-        db.getValue("codes")[code] = 1;
+        set_code_status(js.code, 1);
     else if (js.code == 50070) // Gamepass code
-        db.getValue("codes")[code] = 2;
+        set_code_status(js.code, 2);
     else if (js.consumed == true) // Code valid
-        db.getValue("codes")[code] = 3;
+        set_code_status(js.code, 3);
     
     sendWebhook(config.d_webhook, JSON.stringify({
         "embeds": [
@@ -66,7 +80,7 @@ async function reportGiftStatus(code, payload, body, latency) {
 }
 
 function handleGift(code, payload) {
-    if (db.getValue("codes")[code] != undefined)
+    if (get_code_status(code) != undefined)
         return;
     // synchronously send the request/imediately
     let res = http_client.request_raw(`POST /api/v8/entitlements/gift-codes/${code}/redeem HTTP/1.1

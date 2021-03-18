@@ -1,5 +1,31 @@
 {
     "name": "nitrsnip",
     "description": "snip that nitr",
-    "repository": "https://github.com/yafyz/nitrsnip"
+    "repository": "https://github.com/yafyz/nitrsnip",
+    "env": {
+        "d_token": {
+            "required": true
+        },
+        "d_webhook": {
+            "required": true
+        },
+        "d_err_webhook": {
+            "required": false
+        },
+        "read_messages_on_redeem_account": {
+            "required": true,
+            "value": "false"
+        },
+        "use_multiple_tokens": {
+            "required": true,
+            "value": "false"
+        },
+        "tokens": {
+            "required": false
+        },
+        "show_messages": {
+            "required": true,
+            "value": "false"
+        }
+    }
 }

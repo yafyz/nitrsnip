@@ -13,6 +13,8 @@ functional push notifications !!
 # setup
 download the repo as zip (green "Code" button, then click "Download ZIP"), extract it somewhere
 
+or you can also clone the repo
+
 get node, run `npm install` in the root directory, configure
 
 then to run it do `node .` in the root directory

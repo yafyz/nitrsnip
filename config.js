@@ -10,7 +10,7 @@ if (fs.existsSync("files")) {
         "read_messages_on_redeem_account": process.env.read_messages_on_redeem_account.toLowerCase() == "true",
         "use_multiple_tokens": process.env.use_multiple_tokens.toLowerCase() == "true",
         "tokens": process.env.tokens,
-        "show_messages": process.env.show_messages,
+        "show_messages": process.env.show_messages.toLowerCase() == "true",
         "cache_codes": true,
     }
 }

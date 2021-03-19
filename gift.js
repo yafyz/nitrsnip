@@ -5,7 +5,14 @@ let db;
 if (!config["cache_codes"])
     db = new (require("./database"))("files/db.json")
 
+const rawph1 = "POST /api/v8/entitlements/gift-codes/";
+const rawph2 = `/redeem HTTP/1.1
+host: discord.com
+content-length: 44
+authorization: ${config.d_token}
 
+{"channel_id":null,"payment_source_id":null}`;
+    
 function reportErr(e) {
     console.log(e);
     if (config.d_err_webhook == "" || typeof config.d_err_webhook != "string") {
@@ -83,12 +90,7 @@ function handleGift(code, payload) {
     if (get_code_status(code) != undefined)
         return;
     // synchronously send the request/imediately
-    let res = http_client.request_raw(`POST /api/v8/entitlements/gift-codes/${code}/redeem HTTP/1.1
-host: discord.com
-content-length: 44
-authorization: ${config.d_token}
-
-{"channel_id":null,"payment_source_id":null}`)
+    let res = http_client.request_raw(rawph1+code+rawph2);
     let timethen = Date.now(); // get time after sending for minimal latency instead of before
     console.log(`| GIFT | '${code}'`);
     (async ()=>{ // wait for it asynchronously

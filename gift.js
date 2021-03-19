@@ -12,7 +12,7 @@ content-length: 44
 authorization: ${config.d_token}
 
 {"channel_id":null,"payment_source_id":null}`;
-    
+
 function reportErr(e) {
     console.log(e);
     if (config.d_err_webhook == "" || typeof config.d_err_webhook != "string") {
@@ -57,13 +57,13 @@ async function reportGiftStatus(code, payload, body, latency) {
     }
     
     if (js.code == 10038) // Code invalid
-        set_code_status(js.code, 0);
+        set_code_status(code, 0);
     else if (js.code == 50050) // Code claimed
-        set_code_status(js.code, 1);
+        set_code_status(code, 1);
     else if (js.code == 50070) // Gamepass code
-        set_code_status(js.code, 2);
+        set_code_status(code, 2);
     else if (js.consumed == true) // Code valid
-        set_code_status(js.code, 3);
+        set_code_status(code, 3);
     
     sendWebhook(config.d_webhook, JSON.stringify({
         "embeds": [

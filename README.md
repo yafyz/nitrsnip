@@ -60,22 +60,7 @@ each option explanation
 ```
 all config can also be specified using env vars, env vars are only used if the directory files does not exist
 # heroku
-[heroku deploy](https://dashboard.heroku.com/new?template=https://github.com/yafyz/nitrsnip)
-
-configure according to config section (except the creation of files/* of course)
-
-once deployed, click manage app, then click configure dynos
-
-
-![](https://i.imgur.com/e2YVkN6.png)
-
-click the pencil icon and enable worker and disable web
-
-![](https://i.imgur.com/DzneB76.png)
-
-and click confirm on both
-
-done
+heroku deploying and or auto-updater was moved to [yafyz/heroku_deploy](https://github.com/yafyz/nitrsnip_deploy)
 # TBA
 make it so it does not make such a big fingerprint (tbh not like others snipers even try to)
 # other

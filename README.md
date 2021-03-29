@@ -60,7 +60,7 @@ each option explanation
 ```
 all config can also be specified using env vars, env vars are only used if the directory files does not exist
 # heroku
-heroku deploying and auto-updater was moved to [yafyz/heroku_deploy](https://github.com/yafyz/nitrsnip_deploy)
+heroku deploying and auto-updater was moved to [yafyz/nitrsnip_deploy](https://github.com/yafyz/nitrsnip_deploy)
 # TBA
 make it so it does not make such a big fingerprint (tbh not like others snipers even try to)
 # other

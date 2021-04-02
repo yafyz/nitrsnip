@@ -60,22 +60,7 @@ each option explanation
 ```
 all config can also be specified using env vars, env vars are only used if the directory files does not exist
 # heroku
-[heroku deploy](https://dashboard.heroku.com/new?template=https://github.com/yafyz/nitrsnip)
-
-configure according to config section (except the creation of files/* of course)
-
-once deployed, click manage app, then click configure dynos
-
-
-![](https://i.imgur.com/e2YVkN6.png)
-
-click the pencil icon and enable worker and disable web
-
-![](https://i.imgur.com/DzneB76.png)
-
-and click confirm on both
-
-done
+heroku deploying and auto-updater was moved to [yafyz/nitrsnip_deploy](https://github.com/yafyz/nitrsnip_deploy)
 # TBA
 make it so it does not make such a big fingerprint (tbh not like others snipers even try to)
 # other
@@ -83,9 +68,14 @@ snipe at your own risk as its against discord ToS, probably
 
 the speed heavily depends on your latency to discord servers, heroku has pretty good latency (80-50ms average, 49-38ms also appears alot, 38ms> a bit more rarely)
 
-i have also planned to make my own WS client for this, but i feel like its a waste of time trying to do that as i would gain more performance by just rewriting this in a different language
+~~i have also planned to make my own WS client for this, but i feel like its a waste of time trying to do that as i would gain more performance by just rewriting this in a different language~~
 
-due to reasons above, this project wont get much updates, as i will probably be working on rewriting this in C
+if the motivation is there, custom WS in the future
+
+~~due to reasons above, this project wont get much updates, as i will probably be working on rewriting this in C~~
+thats canceled, because i dont see any big improvements i could make by using C, the parts which may be CPU intensive are already native modules and the use of raw sockets has minimal speed advantage (client -> server on localhost on Win10 2-5ms\[which still is probably caused by node http package overhead], sure raw sockets could probably bring that down a bit but the motivation is not there for such minimal speed improvement)
+
+if you got speed improvements ideas, contact me, pull request, whatever floats your boat
 
 you can donate me BTC `bc1qpxh9vkx4w2r2vcu3ynz7aukfds6szuaut9553z` or ETH `0x77fA812c6AbAbf2bE50Aae5Bf499551F57b57932`, any donation is appreciated
 

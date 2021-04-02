@@ -24,8 +24,7 @@ class discord_client {
         this.#handleEvent = eventHandler;
     }
     connect = function() {
-        let gw = this.#d_gateway;
-        this.#ws = new WebSocket(gw);
+        this.#ws = new WebSocket(this.#d_gateway);
 
         this.#ws.on("open", ()=>{
             this.#zlib_inflate = new zlib.Inflate({chunkSize: 65535, flush: zlib.Z_SYNC_FLUSH});

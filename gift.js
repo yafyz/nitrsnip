@@ -1,4 +1,4 @@
-const regex_str = /(?:discord\.gift|(?:discord|discordapp)\.com\/gifts)\/([A-Za-z0-9]+)/g
+const regex_str = /(?:discord\.gift|(?:discord|discordapp)\.com\/gifts)\/(?=.*[A-Za-z][0-9]+).{16,24}$/g
 const config = require("./config");
 const http_client = new (require("./http"))("discord.com");
 let db;

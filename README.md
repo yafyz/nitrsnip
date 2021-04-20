@@ -15,7 +15,7 @@ download the repo as zip (green "Code" button, then click "Download ZIP"), extra
 
 or you can also clone the repo
 
-get node, run `npm install` in the root directory, configure
+get node, run `npm install` in the root directory (you must have a c/c++ compiler, easiest way is to do it through node setup), configure
 
 then to run it do `node .` in the root directory
 # config

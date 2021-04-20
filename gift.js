@@ -55,7 +55,7 @@ async function reportGiftStatus(code, payload, body, latency) {
         reportErr(error);
         return;
     }
-    
+
     if (js.code == 10038) // Code invalid
         set_code_status(code, 0);
     else if (js.code == 50050) // Code claimed
@@ -64,7 +64,7 @@ async function reportGiftStatus(code, payload, body, latency) {
         set_code_status(code, 2);
     else if (js.consumed == true) // Code valid
         set_code_status(code, 3);
-    
+
     sendWebhook(config.d_webhook, JSON.stringify({
         "embeds": [
           {
@@ -102,8 +102,11 @@ function handleGift(code, payload) {
 }
 
 function checkForGift(packet) {
-    for (const match of packet.d.content.matchAll(regex_str))
-        handleGift(match[1], packet.d);
+    for (const match of packet.d.content.matchAll(regex_str)) {
+        let mlen = match[1].length;
+        if (mlen === 16 /* normal code length */ || mlen === 24 /* gamepass/game code */)
+            handleGift(match[1], packet.d);
+    }
 }
 
 module.exports = {

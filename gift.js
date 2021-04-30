@@ -24,7 +24,7 @@ function reportErr(e) {
     else
         sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": "Stack was null"}]}))
 }
-
+let code_queue = []
 let get_code_status;
 let set_code_status;
 
@@ -39,7 +39,13 @@ function Init() {
         get_code_status = (code) => db.getValue("codes")[code];
         set_code_status = (code, status) => db.getValue("codes")[code] = status;
     }
-    http_client.connect(true, () => http_client.request("POST", `/api/`));
+    http_client.connect(true, () => {
+        if (code_queue.length > 0)
+            for (const v of code)
+                handleGift(v[0], v[1])
+        else
+            http_client.request("POST", `/api/`)
+    });
 }
 
 async function sendWebhook(webhook, body) {
@@ -89,6 +95,10 @@ async function reportGiftStatus(code, payload, body, latency) {
 function handleGift(code, payload) {
     if (get_code_status(code) != undefined)
         return;
+    if (!http_client.is_connected) {
+        code_queue.push([code, payload])
+        return
+    }
     // synchronously send the request/imediately
     let res = http_client.request_raw(rawph1+code+rawph2);
     let timethen = Date.now(); // get time after sending for minimal latency instead of before
@@ -104,7 +114,7 @@ function handleGift(code, payload) {
 function checkForGift(packet) {
     for (const match of packet.d.content.matchAll(regex_str)) {
         let mlen = match[1].length;
-        if (mlen === 16 /* normal code length */ || mlen === 24 /* gamepass/game code */)
+        if (mlen === 16 /* normal code length */ || mlen === 24 /* gamepass/game code length */)
             handleGift(match[1], packet.d);
     }
 }

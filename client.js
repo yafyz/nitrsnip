@@ -71,7 +71,7 @@ class discord_client {
                         this.#ws.close();
                         return
                     }
-                    if (this.#ws != null) {
+                    if (this.#ws != null && this.#ws.OPEN) {
                         this.#ws.send(erlpack.pack({op: op.HEARTBEAT, d: this.#last_sequence}))
                         console.log("| HEARTBEAT |")
                         this.#got_heartbeat_ack = false

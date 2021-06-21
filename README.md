@@ -80,4 +80,6 @@ if you got speed improvements ideas, contact me, pull request, whatever floats y
 you can donate me BTC `bc1qpxh9vkx4w2r2vcu3ynz7aukfds6szuaut9553z` or ETH `0x77fA812c6AbAbf2bE50Aae5Bf499551F57b57932`, any donation is appreciated
 
 # contact
-discord: fyz#7690
+discord: fyz#0300
+
+do not contact me about setting this up, you are leeching anyway so do atleast one thing and set it up your fucking self

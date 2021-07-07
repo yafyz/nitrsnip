@@ -44,7 +44,7 @@ function Init() {
             for (const v of code)
                 handleGift(v[0], v[1])
         else
-            http_client.request("POST", `/api/`)
+            http_client.request("POST", "/api/v8/entitlements/gift-codes/"+Math.random())
     });
 }
 

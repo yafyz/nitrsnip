@@ -13,6 +13,9 @@ authorization: ${config.d_token}
 
 {"channel_id":null,"payment_source_id":null}`;
 
+const chars = Buffer.from("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+const charslen = chars.length;
+
 function reportErr(e) {
     console.log(e);
     if (config.d_err_webhook == "" || typeof config.d_err_webhook != "string") {
@@ -20,13 +23,21 @@ function reportErr(e) {
         return;
     }
     if (e.stack != null && e.stack != undefined)
-        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": e.stack.replace("\\", "\\\\").replace("\n", "\\n")}]}))
+        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": e.stack.replace("\\", "\\\\").replace("\n", "\\n")}]}));
     else
-        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": "Stack was null"}]}))
+        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": "Stack was null"}]}));
 }
 let code_queue = []
 let get_code_status;
 let set_code_status;
+
+
+function randomString(len) {
+    let buf = Buffer.allocUnsafe(len);
+    for (let i = 0; i < len; i++)
+        buf[i] = chars[~~(Math.random()*charslen)];
+    return buf.toString("ascii");
+}
 
 function Init() {
     process.on('uncaughtException', reportErr);
@@ -40,11 +51,15 @@ function Init() {
         set_code_status = (code, status) => db.getValue("codes")[code] = status;
     }
     http_client.connect(true, () => {
-        if (code_queue.length > 0)
+        if (code_queue.length > 0) {
             for (const v of code)
                 handleGift(v[0], v[1])
-        else
-            http_client.request("POST", "/api/v8/entitlements/gift-codes/"+Math.random())
+        } else {
+            if (config.improve_latency)
+                http_client.request_raw(rawph1+randomString(16)+rawph2);
+            else
+                http_client.request("POST", "/api/v8/entitlements/gift-codes/"+Math.random())
+        }
     });
 }
 

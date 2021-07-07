@@ -31,7 +31,7 @@ class httpClient {
             this.reconnect = reconnect;
             this.socket = tls.connect(this.options, ()=>{
                 this.is_connected = true;
-                if (this.#is_reconnect)
+                //if (this.#is_reconnect)
                     on_reconnect_callback();
                 res(this.socket.authorized);
             });

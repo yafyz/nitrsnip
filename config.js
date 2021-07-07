@@ -12,5 +12,6 @@ if (fs.existsSync("files")) {
         "tokens": process.env.tokens,
         "show_messages": process.env.show_messages.toLowerCase() == "true",
         "cache_codes": true,
+        "improve_latency": typeof process.env.improve_latency != "undefined"
     }
 }

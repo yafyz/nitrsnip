@@ -5,7 +5,7 @@ let db;
 if (!config["cache_codes"])
     db = new (require("./database"))("files/db.json")
 
-const rawph1 = "POST /api/v8/entitlements/gift-codes/";
+const rawph1 = "POST /api/v9/entitlements/gift-codes/";
 const rawph2 = `/redeem HTTP/1.1
 host: discord.com
 content-length: 44
@@ -58,7 +58,7 @@ function Init() {
             if (config.improve_latency)
                 http_client.request_raw(rawph1+randomString(16)+rawph2);
             else
-                http_client.request("POST", "/api/v8/entitlements/gift-codes/"+Math.random())
+                http_client.request("POST", "/api/v9/entitlements/gift-codes/"+Math.random())
         }
     });
 }

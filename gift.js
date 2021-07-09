@@ -8,10 +8,8 @@ if (!config["cache_codes"])
 const rawph1 = "POST /api/v9/entitlements/gift-codes/";
 const rawph2 = `/redeem HTTP/1.1
 host: discord.com
-content-length: 44
-authorization: ${config.d_token}
-
-{"channel_id":null,"payment_source_id":null}`;
+content-length: 0
+authorization: ${config.d_token}\r\n\r\n`;
 
 const chars = Buffer.from("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 const charslen = chars.length;

@@ -82,6 +82,14 @@ class discord_client {
                 this.#got_heartbeat_ack = true
                 console.log("| OP | HEARBEAT_ACK")
                 break
+            case op.RECONNECT:
+                console.log("| OP | RECONNECT")
+                this.#ws.close();
+                break;
+            case op.INVALID_SESSION:
+                console.log("| OP | INVALID_SESSION")
+                this.#ws.close();
+                break;
             default:
                 console.log(`| OP | ${JSON.stringify(packet)}`)
         }

@@ -11,10 +11,10 @@ class discord_client {
     #d_gateway = null;
 
     #zlib_inflate = null;
-    
+
     #ws = null;
     #heartbeat_id = null;
-    
+
     #got_heartbeat_ack = null;
     #last_sequence = null;
 
@@ -33,19 +33,19 @@ class discord_client {
             this.#ws.send(this.#auth_data);
             console.log("| WS | SENT AUTH");
         })
-        
+
         this.#ws.on('message', data => {
             if (data.readUInt32BE(data.length-4) ^ ZLIB_SUFFIX == 0) {
                 this.#zlib_inflate.push(data, zlib.Z_SYNC_FLUSH);
                 if (this.#zlib_inflate.result == undefined)
                     return;
-                
+
                 this.#handlePacket(erlpack.unpack(this.#zlib_inflate.result));
             } else {
                 console.log(data.buffer.toString());
             }
         });
-    
+
         this.#ws.on("close", ()=>{
             console.log("on_disconect")
             this.connect();
@@ -55,7 +55,7 @@ class discord_client {
     #handlePacket = function (packet) {
         if (packet.s != undefined)
             this.#last_sequence = packet.s
-    
+
         switch (packet.op) {
             case op.DISPATCH:
                 this.#handleEvent(packet)

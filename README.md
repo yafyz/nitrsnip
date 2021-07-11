@@ -29,7 +29,7 @@ example main config:
 ```json
 {
     "d_token": "",
-    "d_gateway": "wss://gateway.discord.gg/?encoding=etf&v=8&compress=zlib-stream",
+    "d_gateway": "wss://gateway.discord.gg/?encoding=etf&v=9&compress=zlib-stream",
     "d_webhook": "/api/webhooks/11111111/xx-xx",
     "d_err_webhook": "/api/webhooks/222222/yy-yy",
     "read_messages_on_redeem_account": true,

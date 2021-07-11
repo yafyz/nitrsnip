@@ -4,7 +4,7 @@ if (fs.existsSync("files")) {
 } else {
     module.exports = {
         "d_token": process.env.d_token,
-        "d_gateway": "wss://gateway.discord.gg/?encoding=etf&v=8&compress=zlib-stream",
+        "d_gateway": "wss://gateway.discord.gg/?encoding=etf&v=9&compress=zlib-stream",
         "d_webhook": process.env.d_webhook,
         "d_err_webhook": process.env.d_err_webhook || process.env.d_webhook,
         "read_messages_on_redeem_account": process.env.read_messages_on_redeem_account.toLowerCase() == "true",

@@ -127,7 +127,7 @@ function handleGift(code, payload) {
 function checkForGift(packet) {
     for (const match of packet.d.content.matchAll(regex_str)) {
         let mlen = match[1].length;
-        if (mlen === 16 /* normal code length */ || mlen === 24 /* gamepass/game code length */)
+        if (mlen === 16 /* normal code length */ /* || mlen === 24 gamepass/game code length - gamepass codes suck */)
             handleGift(match[1], packet.d);
     }
 }

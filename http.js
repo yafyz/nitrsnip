@@ -6,7 +6,9 @@ class Response {
     Headers = {};
     ContentLength = 0;
     Body = null;
+    Raw = null;
     Error = null;
+    t1 = null;
 }
 
 class httpClient {
@@ -54,6 +56,7 @@ class httpClient {
     #get_response = function() {
         return new Promise(resolve=>{
             let res = new Response();
+            res.Raw = "";
             let content_filled = 0;
 
             let is_chunked = false;
@@ -62,13 +65,15 @@ class httpClient {
             let chunks = [];
 
             let callback = d => {
+                res.Raw += d;
                 if (res.StatusCode == "0") {
+                    res.t1 = Date.now();
                     let hthead = d.indexOf("\r\n");
                     let scode_start = d.indexOf(" ");
                     let scode_end = d.indexOf(" ", scode_start+1);
                     res.StatusCode = d.slice(scode_start+1, scode_end);
                     res.StatusMessage = d.slice(scode_end+1, hthead);
-                    
+
                     let lastidx = hthead+2;
                     let nextidx;
                     let hstr;

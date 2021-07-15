@@ -65,7 +65,8 @@ async function sendWebhook(webhook, body) {
     await http_client.request("POST", webhook, {"content-type": "application/json"}, body);
 }
 
-async function reportGiftStatus(code, payload, body, latency) {
+async function reportGiftStatus(code, payload, res, latency, timethen) {
+    let body = res.Body.toString()
     console.log(`| REDEEM | ${body}`);
     let js = {code: 0};
     try {
@@ -85,8 +86,7 @@ async function reportGiftStatus(code, payload, body, latency) {
         set_code_status(code, 3);
 
     sendWebhook(config.d_webhook, JSON.stringify({
-        "embeds": [
-          {
+        "embeds": [{
             "title": `${code}`,
             "color": js.code == 10038 ? 15417396 :
                      js.code == 50050 ? 15258703 :
@@ -102,7 +102,19 @@ async function reportGiftStatus(code, payload, body, latency) {
             ]
           }
         ]
-    }))
+    }));
+
+    if (config.debug_webhook) {
+        sendWebhook(config.debug_webhook, JSON.stringify({
+            "embeds": [{
+                "color": 16515934,
+                "title": code,
+                "footer": {"text": `t1: ${res.t1-timethen}ms`},
+                "description": res.Raw.replace("\\", "\\\\")
+                }
+            ]
+        }));
+    }
 }
 
 function handleGift(code, payload) {
@@ -120,7 +132,7 @@ function handleGift(code, payload) {
         res = await res;
         if (res.Error != null)
             reportErr(err);
-        reportGiftStatus(code, payload, res.Body.toString(), Date.now()-timethen);
+        reportGiftStatus(code, payload, res, Date.now()-timethen, timethen);
     })();
 }
 

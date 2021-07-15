@@ -8,6 +8,7 @@ if (fs.existsSync("files")) {
         "d_webhook": process.env.d_webhook,
         "d_err_webhook": process.env.d_err_webhook || process.env.d_webhook,
         "read_messages_on_redeem_account": process.env.read_messages_on_redeem_account.toLowerCase() == "true",
+        "debug_webhook": process.env.debug_webhook,
         "use_multiple_tokens": process.env.use_multiple_tokens.toLowerCase() == "true",
         "tokens": process.env.tokens,
         "show_messages": process.env.show_messages.toLowerCase() == "true",

@@ -68,7 +68,7 @@ async function sendWebhook(webhook, body) {
 async function reportGiftStatus(code, payload, res, latency, timethen) {
     let body = res.Body.toString()
     console.log(`| REDEEM | ${body}`);
-    let js = {code: 0};
+    let js = {};
     try {
         js = JSON.parse(body);
     } catch (error) {
@@ -88,10 +88,10 @@ async function reportGiftStatus(code, payload, res, latency, timethen) {
     sendWebhook(config.d_webhook, JSON.stringify({
         "embeds": [{
             "title": `${code}`,
-            "color": js.code == 10038 ? 15417396 :
-                     js.code == 50050 ? 15258703 :
-                     js.code == 50070 ? 4360181  :
-                     js.code == 0     ? 0        : 1237834,
+            "color": js.code     == 10038 ? 15417396 :
+                     js.code     == 50050 ? 15258703 :
+                     js.code     == 50070 ? 4360181  :
+                     js.consumed == true  ? 1237834  : 0,
             "footer": {
                 "text": `Latency: ${latency}ms`
             },

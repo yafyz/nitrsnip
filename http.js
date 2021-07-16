@@ -8,7 +8,7 @@ class Response {
     Body = null;
     Raw = null;
     Error = null;
-    t1 = null;
+    pt = null;
 }
 
 class httpClient {
@@ -57,6 +57,8 @@ class httpClient {
         return new Promise(resolve=>{
             let res = new Response();
             res.Raw = "";
+            res.pt = [];
+
             let content_filled = 0;
 
             let is_chunked = false;
@@ -65,9 +67,9 @@ class httpClient {
             let chunks = [];
 
             let callback = d => {
+                res.pt.push(Date.now());
                 res.Raw += d;
                 if (res.StatusCode == "0") {
-                    res.t1 = Date.now();
                     let hthead = d.indexOf("\r\n");
                     let scode_start = d.indexOf(" ");
                     let scode_end = d.indexOf(" ", scode_start+1);

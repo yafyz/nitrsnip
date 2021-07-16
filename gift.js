@@ -105,12 +105,17 @@ async function reportGiftStatus(code, payload, res, latency, timethen) {
     }));
 
     if (config.debug_webhook) {
+        let tstr = "";
+        for (let t of res.pt) 
+            tstr += (t-timethen)+"/";
+        tstr = tstr.substr(0, tstr.length-1); // remove extra "/"
+
         sendWebhook(config.debug_webhook, JSON.stringify({
             "embeds": [{
                 "color": 16515934,
                 "title": code,
-                "footer": {"text": `t1: ${res.t1-timethen}ms`},
-                "description": res.Raw.replace("\\", "\\\\")
+                "footer": {"text": `t: ${tstr}ms`},
+                "description": res.Raw
                 }
             ]
         }));

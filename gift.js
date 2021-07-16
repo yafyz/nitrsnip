@@ -50,7 +50,7 @@ function Init() {
     }
     http_client.connect(true, () => {
         if (code_queue.length > 0) {
-            for (const v of code)
+            for (const v of code_queue)
                 handleGift(v[0], v[1])
         } else {
             if (config.improve_latency)

@@ -67,9 +67,7 @@ make it so it does not make such a big fingerprint (tbh not like others snipers 
 # other
 snipe at your own risk as its against discord ToS, probably
 
-the speed heavily depends on your latency to discord servers (or cloudflare servers, idk, discord website is behind cloudflare proxy), on AWS you often get sub 55ms (lowest 33ms) response times
-
-if the motivation is there, custom WS in the future
+the speed heavily depends on your latency to discord servers (or cloudflare servers, idk, discord website is behind cloudflare proxy), on AWS you often get sub 55ms response times (lowest 33ms)
 
 idk rewrite in future maybe but idk anymore
 

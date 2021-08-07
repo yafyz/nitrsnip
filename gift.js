@@ -1,6 +1,7 @@
 const regex_str = /(?:discord\.gift|(?:discord|discordapp)\.com\/gifts)\/([A-Za-z0-9]+)/g
 const config = require("./config");
 const http_client = new (require("./http"))("discord.com");
+const http_client_webhooks = new (require("./http"))("discord.com");
 let db;
 if (!config["cache_codes"])
     db = new (require("./database"))("files/db.json")
@@ -59,10 +60,13 @@ function Init() {
                 http_client.request("POST", "/api/v9/entitlements/gift-codes/"+Math.random())
         }
     });
+    http_client_webhooks.connect(true, ()=>{
+        http_client_webhooks.request("GET", "/api/", undefined, undefined, false);
+    });
 }
 
 async function sendWebhook(webhook, body) {
-    await http_client.request("POST", webhook, {"content-type": "application/json"}, body);
+    await http_client_webhooks.request("POST", webhook, {"content-type": "application/json"}, body, false);
 }
 
 async function reportGiftStatus(code, payload, res, latency, timethen) {

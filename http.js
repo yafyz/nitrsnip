@@ -45,6 +45,7 @@ class httpClient {
             })
             if (this.reconnect) {
                 this.socket.on("end", ()=>{
+                    console.log("ended")
                     this.is_connected = false;
                     this.#is_reconnect = true;
                     this.connect(this.reconnect, on_reconnect_callback);
@@ -145,7 +146,7 @@ class httpClient {
         });
     }
 
-    request = function (method, path, headers={Host: this.options.host}, body = "") {
+    request = function (method, path, headers={Host: this.options.host}, body = "", get_response=true) {
         let payload = `${method} ${path} HTTP/1.1\n`;
         if (headers["Host"] == undefined)
             payload += `Host: ${this.options.host}\n`;
@@ -157,7 +158,9 @@ class httpClient {
         if (body.length != 0)
             payload += body;
         this.socket.write(payload);
-        return this.#get_response();
+        if (get_response)
+            return this.#get_response();
+        return;
     }
 
     request_raw = function(payload="") {

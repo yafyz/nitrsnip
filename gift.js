@@ -104,7 +104,7 @@ async function reportGiftStatus(code, payload, res, latency, timethen) {
                      js.code     == 50070 ? 4360181  :
                      js.consumed == true  ? 1237834  : 0,
             "footer": {
-                "text": `Latency: ${latency}ms, Total time: ${Math.floor(Number.parseInt(BigInt(payload.id) >> 22n) + 1420070400000)-res.pt[0]}ms`
+                "text": `Latency: ${latency}ms, Total time: ${res.pt[0]-Math.floor(Number.parseInt(BigInt(payload.id) >> 22n) + 1420070400000)}ms`
             },
             "fields": [
                 {"name": "Message", "value": payload.content, "inline": true},

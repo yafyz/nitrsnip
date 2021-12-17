@@ -60,6 +60,9 @@ each option explanation
 "improve_latency" improves latency on first request after HTTP connect by attempting to claim a random code, might be a risky thing to enable
 ```
 all config can also be specified using env vars, env vars are only used if the directory files does not exist
+# latency vs total time
+basicaly, latency is what you care about, for full explanation refer to this issue
+https://github.com/yafyz/nitrsnip/issues/4#issuecomment-904839322
 # heroku
 heroku deploying and auto-updater was moved to [yafyz/nitrsnip_deploy](https://github.com/yafyz/nitrsnip_deploy)
 # TBA

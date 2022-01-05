@@ -41,8 +41,6 @@ class discord_client {
                     return;
 
                 this.#handlePacket(erlpack.unpack(this.#zlib_inflate.result));
-            } else {
-                console.log(data.buffer.toString());
             }
         });
 

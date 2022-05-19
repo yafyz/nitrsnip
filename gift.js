@@ -16,16 +16,16 @@ authorization: ${config.d_token}\r\n\r\n`;
 const chars = Buffer.from("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 const charslen = chars.length;
 
-function reportErr(e) {
+function reportErr(e, color = 3092790, title = "Uncaught error") {
     console.log(e);
     if (config.d_err_webhook == "" || typeof config.d_err_webhook != "string") {
         console.log("Invalid error report webhook");
         return;
     }
     if (e.stack != null && e.stack != undefined)
-        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": e.stack.replace("\\", "\\\\").replace("\n", "\\n")}]}));
+        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"title": title, "color": color,"description": e.stack.replace("\\", "\\\\").replace("\n", "\\n")}]}));
     else
-        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"color": 3092790,"description": "Stack was null"}]}));
+        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"title": title, "color": color,"description": "Stack was null"}]}));
 }
 let code_queue = []
 let get_code_status;
@@ -162,5 +162,6 @@ function checkForGift(packet) {
 
 module.exports = {
     checkForGift: checkForGift,
-    Init: Init
+    Init: Init,
+    reportErr: reportErr
 }

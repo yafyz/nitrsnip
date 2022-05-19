@@ -39,5 +39,7 @@ if (config["use_multiple_tokens"]) {
         console.log(`Creating dclient for account n${i}`)
         var cl = new dclient(tokens[i], config.d_gateway, handleEvent);
         cl.connect();
+
+        await new Promise(res=>setTimeout(res, 1000));
     }
 })();

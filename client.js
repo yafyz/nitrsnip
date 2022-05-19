@@ -25,6 +25,7 @@ class discord_client {
     }
     connect = function() {
         this.#ws = new WebSocket(this.#d_gateway);
+        this.#ws.on("error", (e)=>{reportErr(e.stack, 0x301800, "Caught ws error, things are hopefully fine")});
 
         this.#ws.on("open", ()=>{
             this.#zlib_inflate = new zlib.Inflate({chunkSize: 65535, flush: zlib.Z_SYNC_FLUSH});
@@ -46,8 +47,9 @@ class discord_client {
             }
         });
 
-        this.#ws.on("close", ()=>{
-            console.log("on_disconect")
+        this.#ws.on("close", async ()=>{
+            console.log("on_disconect");
+            await new Promise(res=>setTimeout(res, 1000));
             this.connect();
         });
     }

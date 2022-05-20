@@ -2,6 +2,7 @@ const fs = require("fs");
 const gifts = require("./gift");
 const dclient = require("./client.js");
 const config = require("./config");
+const server = require("./server/server");
 
 function handleEvent(packet) {
     if (packet.t == "MESSAGE_CREATE") {

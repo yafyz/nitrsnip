@@ -73,15 +73,19 @@ make it so it does not make such a big fingerprint (tbh not like others snipers 
 for deploying on replit, you need to import this to your replit. Create 4 secret keys: 
 
 key 1) name: AltToken
+
        value: your alt tokens (if multiple tokens, example: abcededqw212ja;ansbb12hbh1bahbsh;aaa12a121231231)
        
 key 2) name: mainToken  
+
        value: your main account token
        
-key 3) name: d_err_webhook  
+key 3) name: d_err_webhook
+
        value:  /api/webhooks/abc/abccdefghij   
        
-key 4) name: d_webhook 
+key 4) name: d_webhook
+
        value: /api/webhooks/abc/abccdefghij  
    
 24/7 setup: use https://uptimerobot.com

@@ -68,6 +68,21 @@ https://github.com/yafyz/nitrsnip/issues/4#issuecomment-904839322
 heroku deploying and auto-updater was moved to [yafyz/nitrsnip_deploy](https://github.com/yafyz/nitrsnip_deploy)
 # TBA
 make it so it does not make such a big fingerprint (tbh not like others snipers even try to)
+
+# replit & 24/7 setup
+for deploying on replit, you need to import this to your replit. Create 4 secret keys: 
+
+key 1) name: AltToken
+       value: your alt tokens (if multiple tokens, example: abcededqw212ja;ansbb12hbh1bahbsh;aaa12a121231231)
+key 2) name: mainToken  
+       value: your main account token
+key 3) name: d_err_webhook  
+       value:  /api/webhooks/abc/abccdefghij   
+key 4) name: d_webhook 
+       value: /api/webhooks/abc/abccdefghij  
+   
+24/7 setup: use https://uptimerobot.com
+
 # other
 snipe at your own risk as its against discord ToS, probably
 

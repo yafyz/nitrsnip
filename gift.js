@@ -23,7 +23,7 @@ function reportErr(e, color = 3092790, title = "Uncaught error") {
         return;
     }
     if (e.stack != null && e.stack != undefined)
-        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"title": title, "color": color,"description": e.stack.replace("\\", "\\\\").replace("\n", "\\n")}]}));
+        sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"title": title, "color": color,"description": e.stack}]}));
     else
         sendWebhook(config.d_err_webhook, JSON.stringify({"embeds": [{"title": title, "color": color,"description": "Stack was null"}]}));
 }
@@ -163,5 +163,6 @@ function checkForGift(packet) {
 module.exports = {
     checkForGift: checkForGift,
     Init: Init,
-    reportErr: reportErr
+    reportErr: reportErr,
+    sendWebhook: sendWebhook
 }

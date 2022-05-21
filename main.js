@@ -12,6 +12,7 @@ function handleEvent(packet) {
 }
 
 let tokens = [];
+let clients = [];
 
 if (config["read_messages_on_redeem_account"])
     tokens.push(config["d_token"]);
@@ -37,9 +38,41 @@ if (config["use_multiple_tokens"]) {
     gifts.Init();
     for (let i = 0; i < tokens.length; i++) {
         console.log(`Creating dclient for account n${i}`)
+
         var cl = new dclient(tokens[i], config.d_gateway, handleEvent);
         cl.connect();
 
+        clients[i] = cl;
         await new Promise(res=>setTimeout(res, 1000));
     }
+
+    setInterval(() => {
+        const datenow = Date.now();
+        let msg = "";
+
+        for (idx in clients) {
+            let cl = clients[idx];
+
+            if (datenow - cl.last_heartbeat_timestamp > 100000) {
+                cl.disconnect();
+                msg += `Account n${idx} last heartbeat was ${~~(datenow - cl.last_heartbeat_timestamp)/1000}s ago\n`;
+            }
+        }
+
+        if (msg != "") {
+            msg = msg.trim();
+            console.log(msg);
+
+            gifts.sendWebhook(config.d_err_webhook ? config.d_err_webhook : config.d_webhook, JSON.stringify({
+                "embeds": [{
+                        "color": 0xFF0000,
+                        "description": msg,
+                        "footer": {
+                            "text": "All above were attempted to reconnect"
+                        },
+                    }
+                ]
+            }));
+        }
+    }, 60000);
 })();

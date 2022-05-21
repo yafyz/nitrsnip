@@ -17,12 +17,14 @@ class discord_client {
 
     #got_heartbeat_ack = null;
     #last_sequence = null;
+    last_heartbeat_timestamp = Date.now();
 
     constructor(token, gateway, eventHandler) {
         this.#d_gateway = gateway;
         this.#auth_data = erlpack.pack({"op":op.IDENTIFY,"d":{"token":token,"capabilities":61,"properties":{"os":"Windows","browser":"Discord Client","release_channel":"stable","client_version":"1.0.9001","os_version":"10.0.19041","os_arch":"x64","system_locale":"en-US","client_build_number":84941,"client_event_source":null},"presence":{"status":"invisible","since":0,"activities":[],"afk":true},"compress":false,"client_state":{"guild_hashes":{},"highest_last_message_id":"0","read_state_version":0,"user_guild_settings_version":-1}}})
         this.#handleEvent = eventHandler;
     }
+
     connect = function() {
         this.#ws = new WebSocket(this.#d_gateway);
         this.#ws.on("error", (e)=>{reportErr(e.stack, 0x301800, "Caught ws error, things are hopefully fine")});
@@ -54,46 +56,51 @@ class discord_client {
         });
     }
 
+    disconnect = function() {
+        this.#ws.close();
+    }
+
     #handlePacket = function (packet) {
         if (packet.s != undefined)
-            this.#last_sequence = packet.s
+            this.#last_sequence = packet.s;
 
         switch (packet.op) {
             case op.DISPATCH:
                 this.#handleEvent(packet)
                 break
             case op.HELLO:
-                const heartbeat_interval = packet.d.heartbeat_interval
-                console.log("| OP | HELLO")
-                console.log(`| SET | heartbeat_interval: ${heartbeat_interval}`)
+                const heartbeat_interval = packet.d.heartbeat_interval;
+                console.log("| OP | HELLO");
+                console.log(`| SET | heartbeat_interval: ${heartbeat_interval}`);
                 if (this.#heartbeat_id != null)
                     clearInterval(this.#heartbeat_id)
                     this.#heartbeat_id = setInterval(()=>{
                     if (!this.#got_heartbeat_ack) {
                         this.#ws.close();
-                        return
+                        return;
                     }
                     if (this.#ws != null && this.#ws.OPEN) {
-                        this.#ws.send(erlpack.pack({op: op.HEARTBEAT, d: this.#last_sequence}))
-                        console.log("| HEARTBEAT |")
-                        this.#got_heartbeat_ack = false
+                        this.#ws.send(erlpack.pack({op: op.HEARTBEAT, d: this.#last_sequence}));
+                        console.log("| HEARTBEAT |");
+                        this.#got_heartbeat_ack = false;
                     }
-                }, heartbeat_interval)
+                }, heartbeat_interval);
                 break
             case op.HEARBEAT_ACK:
-                this.#got_heartbeat_ack = true
-                console.log("| OP | HEARBEAT_ACK")
+                this.#got_heartbeat_ack = true;
+                this.last_heartbeat_timestamp = Date.now();
+                console.log("| OP | HEARBEAT_ACK");
                 break
             case op.RECONNECT:
-                console.log("| OP | RECONNECT")
+                console.log("| OP | RECONNECT");
                 this.#ws.close();
                 break;
             case op.INVALID_SESSION:
-                console.log("| OP | INVALID_SESSION")
+                console.log("| OP | INVALID_SESSION");
                 this.#ws.close();
                 break;
             default:
-                console.log(`| OP | ${JSON.stringify(packet)}`)
+                console.log(`| OP | ${JSON.stringify(packet)}`);
         }
     }
 }

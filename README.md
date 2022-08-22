@@ -84,4 +84,4 @@ or you can also star the repo, i don't like asking for it but everyone else does
 # contact
 discord: fyz#0300
 
-do not contact me about setting this up, you are leeching anyway so do atleast one thing and set it up your fucking self
+do not message me about settings this up pls

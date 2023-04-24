@@ -2,6 +2,7 @@ const fs = require("fs");
 const gifts = require("./gift");
 const dclient = require("./client.js");
 const config = require("./config");
+const webserver = require("./webserver");
 
 function handleEvent(packet) {
     if (packet.t == "MESSAGE_CREATE") {
@@ -32,6 +33,10 @@ if (config["use_multiple_tokens"]) {
                 tokens.push(v);
         })
     }
+}
+
+if (process.env.PORT) {
+    webserver.startWebServer(process.env.PORT)
 }
 
 (async ()=>{

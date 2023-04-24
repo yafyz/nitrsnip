@@ -35,7 +35,7 @@ if (config["use_multiple_tokens"]) {
     }
 }
 
-if (process.env.PORT) {
+if (process.env.PORT || config["force_webserver"]) {
     webserver.startWebServer(process.env.PORT)
 }
 

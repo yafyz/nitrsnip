@@ -64,13 +64,17 @@ class httpClient {
 
             let is_chunked = false;
             let got_chunks = false;
+            let headers_finished = false;
             let last_chunk_end = "";
             let chunks = [];
 
             let callback = d => {
                 res.pt.push(Date.now());
                 res.Raw += d;
-                if (res.StatusCode == "0") {
+
+                if (res.StatusCode == "0" || !headers_finished) {
+                    d = res.Raw;
+
                     let hthead = d.indexOf("\r\n");
                     let scode_start = d.indexOf(" ");
                     let scode_end = d.indexOf(" ", scode_start+1);
@@ -84,6 +88,8 @@ class httpClient {
 
                     while (true) {
                         nextidx = d.indexOf("\r\n", lastidx);
+                        if (lastidx > nextidx)
+                            return false;
                         hstr = d.slice(lastidx, nextidx);
                         lastidx = nextidx+2;
                         if (hstr === "")
@@ -91,6 +97,8 @@ class httpClient {
                         colonidx = hstr.indexOf(":");
                         res.Headers[hstr.slice(0,colonidx).toLowerCase()] = hstr.slice(colonidx+2);
                     }
+
+                    headers_finished = true;
 
                     res.ContentLength = Number.parseInt(res.Headers["content-length"]);
                     if (!isNaN(res.ContentLength)) {

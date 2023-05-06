@@ -57,7 +57,8 @@ each option explanation
 "show_messages" if set to true, will log messages to the console
 "tokens" used if "tokens_file" is not specified, tokens seperated by ; (no comment support)
 "cache_codes" when true, codes are only temporarily cached till the application is restarted, when false they are saved on exit and loaded upon startup
-"improve_latency" improves latency on first request after HTTP connect by attempting to claim a random code, might be a risky thing to enable
+"improve_latency" improves latency on first request after HTTP connect by attempting to claim a random code, might be a risky thing to enable (might not actually make a difference because when this is not enabled, it instead just checks if a random code exists without authentication)
+"force_webserver" forces to start a web server even when env var PORT is not set (*ahem* replit *ahem*)
 ```
 all config can also be specified using env vars, env vars are only used if the directory files does not exist
 # latency vs total time

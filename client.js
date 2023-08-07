@@ -2,6 +2,7 @@ const zlib = require("zlib-sync");
 const WebSocket = require("ws");
 const erlpack = require("erlpack");
 const op = require("./op");
+const {reportErr} = require("./gift")
 const ZLIB_SUFFIX = 0x0000FFFF;
 
 class discord_client {
@@ -27,7 +28,7 @@ class discord_client {
 
     connect = function() {
         this.#ws = new WebSocket(this.#d_gateway);
-        this.#ws.on("error", (e)=>{reportErr(e.stack, 0x301800, "Caught ws error, things are hopefully fine")});
+        this.#ws.on("error", (e)=>{reportErr(e, 0x301800, "Caught ws error, things are hopefully fine")});
 
         this.#ws.on("open", ()=>{
             this.#zlib_inflate = new zlib.Inflate({chunkSize: 65535, flush: zlib.Z_SYNC_FLUSH});
